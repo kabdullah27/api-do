@@ -13,8 +13,8 @@ class UsersTableSeeder extends Seeder
     {
         DB::table('users')->insert([
             'id' => DB::raw('UUID()'),
-            'user_code' => 'abdul',
-            'password' => bcrypt('password'),
+            'user_code' => 'test',
+            'password' => bcrypt('test'),
         ]);
     }
 }

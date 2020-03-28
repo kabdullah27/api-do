@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('user_code')->unique();
             $table->string('password');
             $table->string('id_karyawan')->nullable();
-            $table->rememberToken();
+            $table->text('token')->nullable();
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->useCurrent();
         });

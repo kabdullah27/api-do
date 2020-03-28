@@ -34,8 +34,6 @@ class MstItem extends Migration
      */
     public function down()
     {
-        Schema::table('mst_item', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('mst_item');
     }
 }
