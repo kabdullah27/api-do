@@ -16,15 +16,19 @@ class MstDeliveryOrder extends Migration
         Schema::create('mst_delivery_order', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->text('do_seq')->unique();
-            $table->date('do_date');
+            $table->date('do_date')->useCurrent();
             $table->text('do_custid');
-            $table->text('do_deskripsi');
-            $table->text('is_active');
+            $table->text('do_deskripsi')->nullable();
+            $table->text('is_active')->default(1);
             $table->text('created_by');
             $table->dateTime('created_at')->useCurrent();
             $table->text('edited_by');
             $table->dateTime('updated_at')->useCurrent();
         });
+
+        DB::statement('ALTER TABLE mst_delivery_order MODIFY COLUMN do_date date DEFAULT curdate() NOT NULL;');
+        DB::statement('CREATE SEQUENCE do_sequance START WITH 1 INCREMENT BY 1;');
+        
     }
 
     /**
