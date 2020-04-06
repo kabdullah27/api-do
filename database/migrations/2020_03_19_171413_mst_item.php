@@ -17,7 +17,7 @@ class MstItem extends Migration
             $table->uuid('id')->primary();
             $table->text('kode')->unique();
             $table->text('deskripsi_barang')->nullable();
-            $table->text('satuan')->default('PCS');
+            $table->text('satuan')->default('UNIT');
             $table->integer('harga');
             $table->integer('is_active')->default(1);
             $table->integer('is_edit')->default(0);
@@ -26,6 +26,7 @@ class MstItem extends Migration
             $table->text('edited_by');
             $table->dateTime('updated_at')->useCurrent();
         });
+        DB::statement('CREATE SEQUENCE item_sequance START WITH 1 INCREMENT BY 1;');
     }
 
     /**

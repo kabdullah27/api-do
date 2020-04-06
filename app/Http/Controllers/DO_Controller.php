@@ -31,15 +31,9 @@ class DO_Controller extends Controller
      */
     public function index()
     {
-        $mst_do = $this->user->mst_do()->get(['id', 'do_seq'])->toArray();
+        $mst_do = $this->user->mst_do()->get()->toArray();
 
         return $mst_do;
-    }
-
-    private function nvl($data, $ret)
-    {
-        (!$data) ? $data = $data : $data = $ret;
-        return $data;
     }
 
     /**
@@ -61,7 +55,6 @@ class DO_Controller extends Controller
         $data_mst['do_date'] = (isset($request->do_date)) ? $request->do_date : Carbon::now()->format('Y/m/d');
         $data_mst['do_custid'] = $request->do_custid;
         $data_mst['do_deskripsi'] = $request->do_deskripsi;
-        $data_mst['is_active'] = 1;
         $data_mst['created_by'] = $user->user_code;
         $data_mst['edited_by'] = $user->user_code;
 
@@ -86,7 +79,7 @@ class DO_Controller extends Controller
             $data_dtl[$key]['do_deskripsi'] = (isset($val['do_deskripsi'])) ? $val['do_deskripsi'] : NULL;
             $data_dtl[$key]['do_qty'] = $val['do_qty'];
             $data_dtl[$key]['do_cost'] = $val['do_cost'];
-            $data_dtl[$key]['do_satuan'] = 'PCS';
+            $data_dtl[$key]['do_satuan'] = 'UNIT';
             $data_dtl[$key]['is_active'] = 1;
             $data_dtl[$key]['created_by'] = $user->user_code;
             $data_dtl[$key]['edited_by'] = $user->user_code;

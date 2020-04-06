@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('login', 'APIController@login');
+Route::postppp('login', 'APIController@login');
 Route::post('register', 'APIController@register');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
@@ -22,5 +22,12 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::prefix('do')->group(function () {
         Route::get('index', 'DO_Controller@index');
         Route::post('insert', 'DO_Controller@store');
+    });
+
+    Route::prefix('item')->group(function () {
+        Route::get('index', 'Item_controller@index');
+        Route::post('insert', 'Item_controller@store');
+        Route::post('update', 'Item_controller@update');
+        Route::post('delete', 'Item_controller@destroy');
     });
 });

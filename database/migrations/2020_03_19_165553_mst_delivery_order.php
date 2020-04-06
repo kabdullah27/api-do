@@ -26,7 +26,6 @@ class MstDeliveryOrder extends Migration
             $table->dateTime('updated_at')->useCurrent();
         });
 
-        DB::statement('ALTER TABLE mst_delivery_order MODIFY COLUMN do_date date DEFAULT curdate() NOT NULL;');
         DB::statement('CREATE SEQUENCE do_sequance START WITH 1 INCREMENT BY 1;');
         
     }
