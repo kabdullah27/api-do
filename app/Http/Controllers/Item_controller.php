@@ -28,9 +28,9 @@ class Item_controller extends Controller
     /**
      * @return mixed
      */
-    public function index()
+    public function show()
     {
-        $mst_item = $this->user->mst_item()->get()->toArray();
+        $mst_item = Mst_item::where('is_active', 1)->get();
 
         return $mst_item;
     }
@@ -55,7 +55,7 @@ class Item_controller extends Controller
         $data['deskripsi_barang'] = $request->deskripsi_barang;
         $data['satuan'] = (isset($request->satuan)) ? $request->satuan : 'UNIT';
         $data['harga'] = $request->harga;
-        $data['is_edit'] = $request->is_edit;
+        $data['is_edit'] = 0;
         $data['created_by'] = $user->user_code;
         $data['edited_by'] = $user->user_code;
 
@@ -92,8 +92,8 @@ class Item_controller extends Controller
         $user = JWTAuth::user();
 
         $data = $request->all();
-        $updatedRow = Mst_item::find($data['kode']);
-        if (!$updatedRow) {
+        $updated_row = Mst_item::where('kode', $data['kode'])->first();
+        if (!$updated_row) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data Item Tidak Ditemukan.',
@@ -103,10 +103,9 @@ class Item_controller extends Controller
 
         Mst_item::where('kode', $data['kode'])
             ->update([
-                'deskripsi_barang' => $request['deskripsi_barang'],
-                'satuan' => (isset($request['satuan'])) ? $request['satuan'] : 'UNIT',
-                'harga' => $request['harga'],
-                'is_edit' => $request['is_edit'],
+                'deskripsi_barang' => $data['deskripsi_barang'],
+                'satuan' => (isset($data['satuan'])) ? $data['satuan'] : 'UNIT',
+                'harga' => $data['harga'],
                 'edited_by' => $user->user_code,
                 'updated_at' => now()
             ]);
@@ -130,8 +129,8 @@ class Item_controller extends Controller
         $user = JWTAuth::user();
 
         $data = $request->all();
-        $updatedRow = Mst_item::find($data['kode']);
-        if (!$updatedRow) {
+        $updated_row = Mst_item::find($data['kode']);
+        if (!$updated_row) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data Item Tidak Ditemukan.',
@@ -145,7 +144,7 @@ class Item_controller extends Controller
                 'edited_by' => $user->user_code,
                 'updated_at' => now()
             ]);
-            
+
         return response()->json([
             'success' => true,
             'message' => 'Data Item Berhasil Di nonaktifkan',

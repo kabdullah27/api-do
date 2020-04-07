@@ -13,19 +13,19 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::postppp('login', 'APIController@login');
+Route::post('login', 'APIController@login');
 Route::post('register', 'APIController@register');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('logout', 'APIController@logout');
 
     Route::prefix('do')->group(function () {
-        Route::get('index', 'DO_Controller@index');
+        Route::get('show', 'DO_Controller@show');
         Route::post('insert', 'DO_Controller@store');
     });
 
     Route::prefix('item')->group(function () {
-        Route::get('index', 'Item_controller@index');
+        Route::get('show', 'Item_controller@show');
         Route::post('insert', 'Item_controller@store');
         Route::post('update', 'Item_controller@update');
         Route::post('delete', 'Item_controller@destroy');

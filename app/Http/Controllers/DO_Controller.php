@@ -29,9 +29,12 @@ class DO_Controller extends Controller
     /**
      * @return mixed
      */
-    public function index()
+    public function show()
     {
-        $mst_do = $this->user->mst_do()->get()->toArray();
+        $mst_do = DB::table('mst_delivery_order')
+            ->join('dtl_delivery_order','mst_delivery_order.do_seq','=','dtl_delivery_order.do_seq')
+            ->where('mst_delivery_order.is_active', '=', 1)
+            ->get();
 
         return $mst_do;
     }
@@ -89,9 +92,10 @@ class DO_Controller extends Controller
         Dtl_DO::insert($data_dtl);
 
         return response()->json([
-            'success' => true,
-            'message' => 'Data DO Berhasil Dibuat',
-            'data'    => $data_mst
+            'success'       => true,
+            'message'       => 'Data DO Berhasil Dibuat',
+            'data_mst'      => $data_mst,
+            'data_detail'   => $data_dtl
         ], 200);
     }
 }

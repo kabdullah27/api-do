@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DtlDeliveryOrder extends Migration
+class MasterInvoice extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,22 @@ class DtlDeliveryOrder extends Migration
      */
     public function up()
     {
-        Schema::create('dtl_delivery_order', function (Blueprint $table) {
-            $table->text('do_seq');
-            $table->integer('do_rownum');
-            $table->text('do_itemid');
-            $table->text('do_deskripsi')->nullable();
-            $table->integer('do_qty');
-            $table->integer('do_cost');
-            $table->text('do_satuan')->default('UNIT');
+        Schema::create('mst_invoice', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->text('kwitansi_seq')->unique();
+            $table->text('inv_seq')->unique();
+            $table->date('inv_date')->useCurrent();
+            $table->text('inv_custid');
+            $table->text('inv_deskripsi')->nullable();
             $table->text('is_active')->default(1);
             $table->text('created_by');
             $table->dateTime('created_at')->useCurrent();
             $table->text('edited_by');
             $table->dateTime('updated_at')->useCurrent();
         });
+
+        DB::statement('CREATE SEQUENCE inv_sequance START WITH 1 INCREMENT BY 1;');
+        DB::statement('CREATE SEQUENCE kwitansi_sequance START WITH 1 INCREMENT BY 1;');
     }
 
     /**
@@ -36,6 +38,6 @@ class DtlDeliveryOrder extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dtl_delivery_order');
+        Schema::dropIfExists('mst_invoice');
     }
 }
