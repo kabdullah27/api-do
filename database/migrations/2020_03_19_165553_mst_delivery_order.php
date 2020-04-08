@@ -15,7 +15,7 @@ class MstDeliveryOrder extends Migration
     {
         Schema::create('mst_delivery_order', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->text('do_seq')->unique();
+            $table->string('do_seq')->unique();
             $table->date('do_date')->useCurrent();
             $table->text('do_custid');
             $table->text('do_deskripsi')->nullable();

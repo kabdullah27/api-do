@@ -15,7 +15,7 @@ class MstItem extends Migration
     {
         Schema::create('mst_item', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->text('kode')->unique();
+            $table->string('kode')->unique();
             $table->text('deskripsi_barang')->nullable();
             $table->text('satuan')->default('UNIT');
             $table->integer('harga');

@@ -15,7 +15,7 @@ class MstCustomer extends Migration
     {
         Schema::create('mst_customer', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->text('kode')->unique();
+            $table->string('kode')->unique();
             $table->text('store_name');
             $table->text('store_rgm');
             $table->text('store_address');
