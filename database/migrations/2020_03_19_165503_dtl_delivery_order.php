@@ -20,8 +20,8 @@ class DtlDeliveryOrder extends Migration
             $table->text('do_deskripsi')->nullable();
             $table->integer('do_qty');
             $table->integer('do_cost');
-            $table->text('do_satuan')->default('UNIT');
-            $table->text('is_active')->default(1);
+            $table->string('do_satuan')->default('UNIT');
+            $table->integer('is_active')->default(1);
             $table->text('created_by');
             $table->dateTime('created_at')->useCurrent();
             $table->text('edited_by');

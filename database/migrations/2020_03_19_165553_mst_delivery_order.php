@@ -19,7 +19,7 @@ class MstDeliveryOrder extends Migration
             $table->date('do_date')->useCurrent();
             $table->text('do_custid');
             $table->text('do_deskripsi')->nullable();
-            $table->text('is_active')->default(1);
+            $table->integer('is_active')->default(1);
             $table->text('created_by');
             $table->dateTime('created_at')->useCurrent();
             $table->text('edited_by');

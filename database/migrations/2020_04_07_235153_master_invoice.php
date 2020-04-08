@@ -20,7 +20,7 @@ class MasterInvoice extends Migration
             $table->date('inv_date')->useCurrent();
             $table->text('inv_custid');
             $table->text('inv_deskripsi')->nullable();
-            $table->text('is_active')->default(1);
+            $table->integer('is_active')->default(1);
             $table->text('created_by');
             $table->dateTime('created_at')->useCurrent();
             $table->text('edited_by');

@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('id_karyawan')->nullable();
             $table->text('token')->nullable();
-            $table->text('is_active')->default(1);
+            $table->integer('is_active')->default(1);
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->useCurrent();
         });

@@ -20,8 +20,8 @@ class DetailInvoice extends Migration
             $table->text('inv_deskripsi')->nullable();
             $table->integer('inv_qty');
             $table->integer('inv_cost');
-            $table->text('inv_satuan')->default('UNIT');
-            $table->text('is_active')->default(1);
+            $table->string('inv_satuan')->default('UNIT');
+            $table->integer('is_active')->default(1);
             $table->text('created_by');
             $table->dateTime('created_at')->useCurrent();
             $table->text('edited_by');
