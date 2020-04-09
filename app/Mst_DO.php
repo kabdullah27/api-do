@@ -22,6 +22,15 @@ class Mst_DO extends Model
         'do_custid' => 'required',
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'created_by', 'created_at', 'edited_by', 'updated_at'
+    ];
+
 
     /**
      * @var array
