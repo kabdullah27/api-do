@@ -23,6 +23,15 @@ class Dtl_DO extends Model
     ];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'created_by', 'created_at', 'edited_by', 'updated_at'
+    ];
+
+    /**
      * @var array
      */
     protected $guarded = [];

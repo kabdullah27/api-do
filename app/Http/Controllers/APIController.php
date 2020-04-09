@@ -32,9 +32,12 @@ class APIController extends Controller
             ], 401);
         }
 
+        $data_user = User::where('user_code', $request->user_code)->first();
+
         return response()->json([
             'success' => true,
-            'token' => $token,
+            'message' => $token,
+            'data'    => $data_user
         ]);
     }
 
