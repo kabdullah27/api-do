@@ -18,6 +18,7 @@ Route::post('register', 'APIController@register');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('logout', 'APIController@logout');
+    Route::get('user', 'APIController@getAuthenticatedUser');
 
     Route::prefix('do')->group(function () {
         Route::get('show', 'DO_Controller@show');
