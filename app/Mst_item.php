@@ -11,6 +11,7 @@ class Mst_item extends Model
      */
     protected $table = 'mst_item';
 
+
     /**
      * Validation.
      *

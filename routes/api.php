@@ -31,4 +31,11 @@ Route::group(['middleware' => 'auth.jwt'], function () {
         Route::post('update', 'Item_controller@update');
         Route::post('delete', 'Item_controller@destroy');
     });
+
+    Route::prefix('cust')->group(function () {
+        Route::get('show', 'Customer_controller@show');
+        Route::post('insert', 'Customer_controller@store');
+        Route::post('update', 'Customer_controller@update');
+        Route::post('delete', 'Customer_controller@destroy');
+    });
 });
