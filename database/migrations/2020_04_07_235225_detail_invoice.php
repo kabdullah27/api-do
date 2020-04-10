@@ -14,10 +14,11 @@ class DetailInvoice extends Migration
     public function up()
     {
         Schema::create('dtl_invoice', function (Blueprint $table) {
-            $table->text('kwitansi_seq');
-            $table->text('inv_seq');
+            $table->string('kwitansi_seq');
+            $table->string('inv_seq');
+            $table->string('do_seq');
             $table->integer('inv_rownum');
-            $table->text('inv_itemid');
+            $table->string('inv_itemid');
             $table->text('inv_deskripsi')->nullable();
             $table->integer('inv_qty');
             $table->integer('inv_cost');

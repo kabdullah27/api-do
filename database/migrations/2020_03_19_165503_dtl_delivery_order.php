@@ -14,9 +14,9 @@ class DtlDeliveryOrder extends Migration
     public function up()
     {
         Schema::create('dtl_delivery_order', function (Blueprint $table) {
-            $table->text('do_seq');
+            $table->string('do_seq');
             $table->integer('do_rownum');
-            $table->text('do_itemid');
+            $table->string('do_itemid');
             $table->text('do_deskripsi')->nullable();
             $table->integer('do_qty');
             $table->integer('do_cost');
