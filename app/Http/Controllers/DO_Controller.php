@@ -41,10 +41,19 @@ class DO_Controller extends Controller
             ->where('do_seq', '=', $val->do_seq)
             ->get();
         }
+
+        if (!isset($data_do)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data DO Tidak Ada.',
+                'data'    => null
+            ], 500);
+        }
+
         return response()->json([
             'success'       => true,
             'message'       => 'Data DO',
-            'data'      => $data_do,
+            'data'          => $data_do,
         ], 200);
     }
 

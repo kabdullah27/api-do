@@ -25,6 +25,11 @@ Route::group(['middleware' => 'auth.jwt'], function () {
         Route::post('insert', 'DO_Controller@store');
     });
 
+    Route::prefix('invoice')->group(function () {
+        Route::get('show', 'Invoice_controller@show');
+        Route::post('insert', 'Invoice_controller@store');
+    });
+
     Route::prefix('item')->group(function () {
         Route::get('show', 'Item_controller@show');
         Route::post('insert', 'Item_controller@store');
