@@ -19,6 +19,7 @@ class Mst_DO extends Model
     public static $rules = [
         'id' => 'required',
         'do_seq' => 'required',
+        'po_seq' => 'required',
         'do_custid' => 'required',
     ];
 
