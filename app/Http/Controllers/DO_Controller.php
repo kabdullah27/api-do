@@ -41,7 +41,7 @@ class DO_Controller extends Controller
                 ->first();
             $data_do[$key] = $val;
             $data_do[$key]->flag_invoice = (isset($flag_invoice)) ? 1 : 0;
-            $data_do[$key]->total_cost = DB::table('dtl_delivery_order')->max('do_cost')->where('do_seq', '=', $val->do_seq);
+            $data_do[$key]->total_cost = DB::table('dtl_delivery_order')->where('do_seq', $val->do_seq)->sum('do_cost');
             $data_do[$key]->do_detail = DB::table('dtl_delivery_order')
                 ->where('do_seq', '=', $val->do_seq)
                 ->get();
@@ -79,7 +79,7 @@ class DO_Controller extends Controller
             ->where('do_seq', $request->do_seq)
             ->first();
         $mst_do->flag_invoice = (isset($flag_invoice)) ? 1 : 0;
-        $mst_do->total_cost = DB::table('dtl_delivery_order')->max('do_cost')->where('do_seq', $request->do_seq);
+        $mst_do->total_cost = DB::table('dtl_delivery_order')->where('do_seq', $request->do_seq)->sum('do_cost');
         $mst_do->user_print = $user->user_code;
         $mst_do->do_detail = DB::table('dtl_delivery_order')
             ->where('do_seq', $request->do_seq)

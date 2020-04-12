@@ -39,7 +39,7 @@ class Invoice_Controller extends Controller
 
         foreach ($mst_inv as $key => $val) {
             $data_inv[$key] = $val;
-            $data_inv[$key]->total_cost = DB::table('dtl_invoice')->max('inv_cost')->where('inv_seq', '=', $val->inv_seq);
+            $data_inv[$key]->total_cost = DB::table('dtl_invoice')->where('inv_seq', $val->inv_seq)->sum('inv_cost');
             $data_inv[$key]->inv_detail = DB::table('dtl_invoice')
                 ->where('inv_seq', '=', $val->inv_seq)
                 ->get();
@@ -72,7 +72,7 @@ class Invoice_Controller extends Controller
             ->where('inv_seq', $request->inv_seq)
             ->first();
         
-        $mst_inv->total_cost = DB::table('dtl_invoice')->max('inv_cost')->where('inv_seq', $request->inv_seq);
+        $mst_inv->total_cost = DB::table('dtl_invoice')->where('inv_seq', $request->inv_seq)->sum('inv_cost');
         $mst_inv->user_print = $user->user_code;
         $mst_inv->do_detail = DB::table('dtl_invoice')
             ->where('inv_seq', $request->inv_seq)
