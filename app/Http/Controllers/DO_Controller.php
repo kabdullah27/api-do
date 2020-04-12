@@ -35,25 +35,67 @@ class DO_Controller extends Controller
             ->where('is_active', '=', 1)
             ->get();
 
-        foreach($mst_do as $key => $val){
+        foreach ($mst_do as $key => $val) {
+            $flag_invoice = DB::table('dtl_invoice')
+                ->where('do_seq', '=', $val->do_seq)
+                ->first();
             $data_do[$key] = $val;
+            $data_do[$key]->flag_invoice = (isset($flag_invoice)) ? 1 : 0;
             $data_do[$key]->do_detail = DB::table('dtl_delivery_order')
-            ->where('do_seq', '=', $val->do_seq)
-            ->get();
+                ->where('do_seq', '=', $val->do_seq)
+                ->get();
         }
 
         if (!isset($data_do)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data DO Tidak Ada.',
+                'message' => 'Data DO Tidak Ditemukan.',
                 'data'    => null
             ], 500);
         }
 
         return response()->json([
             'success'       => true,
-            'message'       => 'Data DO',
+            'message'       => 'Data DO Berhasil Ditemukan.',
             'data'          => $data_do,
+        ], 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function prints_do(Request $request)
+    {
+        $user = JWTAuth::user();
+        // dd($request);
+        $mst_do = DB::table('mst_delivery_order')
+            ->where('do_seq', $request->do_seq)
+            ->first();
+
+        $flag_invoice = DB::table('dtl_invoice')
+            ->where('do_seq', $request->do_seq)
+            ->first();
+        $mst_do->flag_invoice = (isset($flag_invoice)) ? 1 : 0;
+        $mst_do->user_print = $user->user_code;
+        $mst_do->do_detail = DB::table('dtl_delivery_order')
+            ->where('do_seq', $request->do_seq)
+            ->get();
+
+
+        if (!isset($mst_do)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data DO Tidak Ditemukan.',
+                'data'    => null
+            ], 500);
+        }
+
+        return response()->json([
+            'success'       => true,
+            'message'       => 'Data DO Berhasil Ditemukan.',
+            'data'          => $mst_do,
         ], 200);
     }
 

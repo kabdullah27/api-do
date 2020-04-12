@@ -23,11 +23,13 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::prefix('do')->group(function () {
         Route::get('show', 'DO_Controller@show');
         Route::post('insert', 'DO_Controller@store');
+        Route::post('prints', 'DO_Controller@prints_do');
     });
 
     Route::prefix('invoice')->group(function () {
         Route::get('show', 'Invoice_controller@show');
         Route::post('insert', 'Invoice_controller@store');
+        Route::post('prints', 'Invoice_controller@prints_inv');
     });
 
     Route::prefix('item')->group(function () {
