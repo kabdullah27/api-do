@@ -32,11 +32,20 @@ class DO_Controller extends Controller
     public function show()
     {
         $mst_do = DB::table('mst_delivery_order')
-            ->join('dtl_delivery_order','mst_delivery_order.do_seq','=','dtl_delivery_order.do_seq')
-            ->where('mst_delivery_order.is_active', '=', 1)
+            ->where('is_active', '=', 1)
             ->get();
 
-        return $mst_do;
+        foreach($mst_do as $key => $val){
+            $data_do[$key] = $val;
+            $data_do[$key]->do_detail = DB::table('dtl_delivery_order')
+            ->where('do_seq', '=', $val->do_seq)
+            ->get();
+        }
+        return response()->json([
+            'success'       => true,
+            'message'       => 'Data DO',
+            'data'      => $data_do,
+        ], 200);
     }
 
     /**
