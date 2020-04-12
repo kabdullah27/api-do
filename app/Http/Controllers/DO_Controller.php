@@ -55,6 +55,7 @@ class DO_Controller extends Controller
         $id = DB::select('select UUID() as uuid');
         $data_mst['id'] = $id[0]->uuid;
         $data_mst['do_seq'] = str_pad($sequence, 5, '0', STR_PAD_LEFT) . '/BE/DO/' . Carbon::now()->year;
+        $data_mst['po_seq'] = $request->po_seq;
         $data_mst['do_date'] = (isset($request->do_date)) ? $request->do_date : Carbon::now()->format('Y/m/d');
         $data_mst['do_custid'] = $request->do_custid;
         $data_mst['do_deskripsi'] = $request->do_deskripsi;
