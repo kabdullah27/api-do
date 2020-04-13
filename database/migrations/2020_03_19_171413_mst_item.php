@@ -21,9 +21,9 @@ class MstItem extends Migration
             $table->integer('harga');
             $table->integer('is_active')->default(1);
             $table->integer('is_edit')->default(0);
-            $table->text('created_by');
+            $table->text('created_by')->default('admin');
             $table->dateTime('created_at')->useCurrent();
-            $table->text('edited_by');
+            $table->text('edited_by')->default('admin');
             $table->dateTime('updated_at')->useCurrent();
         });
         DB::statement('CREATE SEQUENCE item_sequance START WITH 1 INCREMENT BY 1;');

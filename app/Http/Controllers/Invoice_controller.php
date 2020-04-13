@@ -118,12 +118,12 @@ class Invoice_Controller extends Controller
         // Get Sequence
         if (!isset($sequance_kwitansi)) {
             $sequance_kwitansi = DB::select("select NEXTVAL(kwitansi_sequance) as seq");
-            $sequance_kwitansi = str_pad($sequance_kwitansi[0]->seq, 5, '0', STR_PAD_LEFT) . '/BE/KWI/' . Carbon::now()->year;
+            $sequance_kwitansi = str_pad($sequance_kwitansi[0]->seq, 5, '0', STR_PAD_LEFT) . '-BE-KWI-' . Carbon::now()->year;
         } else {
-            $sequance_kwitansi = str_pad($sequance_kwitansi->kwitansi_seq, 5, '0', STR_PAD_LEFT) . '/BE/KWI/' . Carbon::now()->year;
+            $sequance_kwitansi = str_pad($sequance_kwitansi->kwitansi_seq, 5, '0', STR_PAD_LEFT) . '-BE-KWI-' . Carbon::now()->year;
         }
         $sequence_inv = DB::select("select NEXTVAL(inv_sequance) as seq");
-        $sequence_inv = str_pad($sequence_inv[0]->seq, 5, '0', STR_PAD_LEFT) . '/BE/INV/' . Carbon::now()->year;
+        $sequence_inv = str_pad($sequence_inv[0]->seq, 5, '0', STR_PAD_LEFT) . '-BE-INV-' . Carbon::now()->year;
 
         $id = DB::select('select UUID() as uuid');
         $data_mst['id'] = $id[0]->uuid;

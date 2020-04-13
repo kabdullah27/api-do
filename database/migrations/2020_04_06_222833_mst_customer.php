@@ -29,9 +29,9 @@ class MstCustomer extends Migration
             $table->string('store_status')->nullable()->default('Open');;
             $table->string('store_category')->nullable();
             $table->integer('is_active')->default(1);
-            $table->string('created_by');
+            $table->string('created_by')->default('admin');
             $table->dateTime('created_at')->useCurrent();
-            $table->string('edited_by');
+            $table->string('edited_by')->default('admin');
             $table->dateTime('updated_at')->useCurrent();
         });
         DB::statement('CREATE SEQUENCE customer_sequance START WITH 1 INCREMENT BY 1;');
