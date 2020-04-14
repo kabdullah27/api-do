@@ -47,6 +47,9 @@ class Invoice_Controller extends Controller
             $data_inv[$key]->total_cost = 0;
             $data_inv[$key]->po_seq = $data_do->po_seq;
             $data_inv[$key]->do_seq = $data_do->do_seq;
+            $data_inv[$key]->data_cust = DB::table('mst_customer')
+                ->where('kode', $val->inv_custid)
+                ->first();
             $data_inv[$key]->inv_detail = DB::table('dtl_invoice')
                 ->where('inv_seq', $val->inv_seq)
                 ->get();
@@ -95,6 +98,9 @@ class Invoice_Controller extends Controller
         $mst_inv->user_print = $user->user_code;
         $mst_inv->po_seq = $data_do->po_seq;
         $mst_inv->do_seq = $data_do->do_seq;
+        $mst_inv->data_cust = DB::table('mst_customer')
+            ->where('kode', $mst_inv->inv_custid)
+            ->first();
         $mst_inv->inv_detail = DB::table('dtl_invoice')
             ->where('inv_seq', $request->inv_seq)
             ->get();

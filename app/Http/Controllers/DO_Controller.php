@@ -33,18 +33,21 @@ class DO_Controller extends Controller
     public function show()
     {
         $mst_do = DB::table('mst_delivery_order')
-            ->where('is_active', '=', 1)
+            ->where('is_active', 1)
             ->get();
 
         foreach ($mst_do as $key => $val) {
             $flag_invoice = DB::table('dtl_invoice')
-                ->where('do_seq', '=', $val->do_seq)
+                ->where('do_seq', $val->do_seq)
                 ->first();
             $data_do[$key] = $val;
             $data_do[$key]->flag_invoice = (isset($flag_invoice)) ? 1 : 0;
             $data_do[$key]->total_cost = 0;
+            $data_do[$key]->data_cust = DB::table('mst_customer')
+                ->where('kode', $val->do_custid)
+                ->first();
             $data_do[$key]->do_detail = DB::table('dtl_delivery_order')
-                ->where('do_seq', '=', $val->do_seq)
+                ->where('do_seq', $val->do_seq)
                 ->get();
             $total_cost = 0;
             foreach ($data_do[$key]->do_detail as $key2 => $val2) {
@@ -88,6 +91,9 @@ class DO_Controller extends Controller
         $mst_do->flag_invoice = (isset($flag_invoice)) ? 1 : 0;
         $mst_do->total_cost = 0;
         $mst_do->user_print = $user->user_code;
+        $mst_do->data_cust = DB::table('mst_customer')
+            ->where('kode', $mst_do->do_custid)
+            ->first();
         $mst_do->do_detail = DB::table('dtl_delivery_order')
             ->where('do_seq', $request->do_seq)
             ->get();
