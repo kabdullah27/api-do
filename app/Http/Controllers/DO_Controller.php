@@ -41,10 +41,16 @@ class DO_Controller extends Controller
                 ->first();
             $data_do[$key] = $val;
             $data_do[$key]->flag_invoice = (isset($flag_invoice)) ? 1 : 0;
-            $data_do[$key]->total_cost = DB::table('dtl_delivery_order')->where('do_seq', $val->do_seq)->sum('do_cost');
+            $data_do[$key]->total_cost = 0;
             $data_do[$key]->do_detail = DB::table('dtl_delivery_order')
                 ->where('do_seq', '=', $val->do_seq)
                 ->get();
+            $total_cost = 0;
+            foreach ($data_do[$key]->do_detail as $key2 => $val2) {
+                $data_do[$key]->do_detail[$key2]->total_cost = $data_do[$key]->do_detail[$key2]->do_cost * $data_do[$key]->do_detail[$key2]->do_qty;
+                $total_cost += $data_do[$key]->do_detail[$key2]->total_cost;
+            }
+            $data_do[$key]->total_cost = $total_cost;
         }
 
         if (!isset($data_do)) {
@@ -79,11 +85,18 @@ class DO_Controller extends Controller
             ->where('do_seq', $request->do_seq)
             ->first();
         $mst_do->flag_invoice = (isset($flag_invoice)) ? 1 : 0;
-        $mst_do->total_cost = DB::table('dtl_delivery_order')->where('do_seq', $request->do_seq)->sum('do_cost');
+        $mst_do->total_cost = 0;
         $mst_do->user_print = $user->user_code;
         $mst_do->do_detail = DB::table('dtl_delivery_order')
             ->where('do_seq', $request->do_seq)
             ->get();
+        $total_cost = 0;
+        foreach ($mst_do->do_detail as $key => $val) {
+            $mst_do->do_detail[$key]->total_cost = $mst_do->do_detail[$key]->do_cost * $mst_do->do_detail[$key]->do_qty;
+            $total_cost += $mst_do->do_detail[$key]->total_cost;
+        }
+
+        $mst_do->total_cost = $total_cost;
 
 
         if (!isset($mst_do)) {

@@ -38,11 +38,24 @@ class Invoice_Controller extends Controller
             ->get();
 
         foreach ($mst_inv as $key => $val) {
+            $data_do = DB::table('dtl_invoice')
+                ->leftJoin('mst_delivery_order', 'dtl_invoice.do_seq', '=', 'mst_delivery_order.do_seq')
+                ->where('inv_seq', $val->inv_seq)
+                ->first();
             $data_inv[$key] = $val;
-            $data_inv[$key]->total_cost = DB::table('dtl_invoice')->where('inv_seq', $val->inv_seq)->sum('inv_cost');
+            $data_inv[$key]->total_cost = 0;
+            $data_inv[$key]->po_seq = $data_do->po_seq;
+            $data_inv[$key]->do_seq = $data_do->do_seq;
             $data_inv[$key]->inv_detail = DB::table('dtl_invoice')
-                ->where('inv_seq', '=', $val->inv_seq)
+                ->where('inv_seq', $val->inv_seq)
                 ->get();
+
+            $total_cost = 0;
+            foreach ($data_inv[$key]->inv_detail as $key2 => $val2) {
+                $data_inv[$key]->inv_detail[$key2]->total_cost = $data_inv[$key]->inv_detail[$key2]->inv_cost * $data_inv[$key]->inv_detail[$key2]->inv_qty;
+                $total_cost += $data_inv[$key]->inv_detail[$key2]->total_cost;
+            }
+            $data_inv[$key]->total_cost = $total_cost;
         }
 
         if (!isset($data_inv)) {
@@ -71,12 +84,27 @@ class Invoice_Controller extends Controller
         $mst_inv = DB::table('mst_invoice')
             ->where('inv_seq', $request->inv_seq)
             ->first();
-        
-        $mst_inv->total_cost = DB::table('dtl_invoice')->where('inv_seq', $request->inv_seq)->sum('inv_cost');
+
+        $data_do = DB::table('dtl_invoice')
+            ->leftJoin('mst_delivery_order', 'dtl_invoice.do_seq', '=', 'mst_delivery_order.do_seq')
+            ->where('inv_seq', $request->inv_seq)
+            ->first();
+
+        $mst_inv->total_cost = 0;
         $mst_inv->user_print = $user->user_code;
-        $mst_inv->do_detail = DB::table('dtl_invoice')
+        $mst_inv->po_seq = $data_do->po_seq;
+        $mst_inv->do_seq = $data_do->do_seq;
+        $mst_inv->inv_detail = DB::table('dtl_invoice')
             ->where('inv_seq', $request->inv_seq)
             ->get();
+
+        $total_cost = 0;
+
+        foreach ($mst_inv->inv_detail as $key => $val) {
+            $mst_inv->inv_detail[$key]->total_cost = $mst_inv->inv_detail[$key]->inv_cost * $mst_inv->inv_detail[$key]->inv_qty;
+            $total_cost += $mst_inv->inv_detail[$key]->total_cost;
+        }
+        $mst_inv->total_cost = $total_cost;
 
         if (!isset($mst_inv)) {
             return response()->json([
