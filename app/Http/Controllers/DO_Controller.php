@@ -9,6 +9,7 @@ use App\Mst_DO;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Riskihajar\Terbilang\Facades\Terbilang;
 use Carbon\Carbon;
 
 class DO_Controller extends Controller
@@ -95,8 +96,8 @@ class DO_Controller extends Controller
             $mst_do->do_detail[$key]->total_cost = $mst_do->do_detail[$key]->do_cost * $mst_do->do_detail[$key]->do_qty;
             $total_cost += $mst_do->do_detail[$key]->total_cost;
         }
-
         $mst_do->total_cost = $total_cost;
+        $mst_do->terbilang = Terbilang::make($mst_do->total_cost, ' rupiah');
 
 
         if (!isset($mst_do)) {

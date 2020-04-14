@@ -10,6 +10,7 @@ use App\Mst_DO;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Riskihajar\Terbilang\Facades\Terbilang;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
@@ -105,6 +106,8 @@ class Invoice_Controller extends Controller
             $total_cost += $mst_inv->inv_detail[$key]->total_cost;
         }
         $mst_inv->total_cost = $total_cost;
+        $mst_inv->terbilang = Terbilang::make($mst_inv->total_cost, ' rupiah');
+
 
         if (!isset($mst_inv)) {
             return response()->json([

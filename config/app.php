@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'id',
 
     /*
     |--------------------------------------------------------------------------
@@ -161,6 +161,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Riskihajar\Terbilang\TerbilangServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -225,6 +226,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Terbilang' => Riskihajar\Terbilang\Facades\Terbilang::class,
 
     ],
 
