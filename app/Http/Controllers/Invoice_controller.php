@@ -82,6 +82,58 @@ class Invoice_Controller extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
+    public function invoice_excel(Request $request)
+    {
+        $mst_inv = DB::table('mst_invoice')
+            ->where('is_active', '=', 1)
+            ->whereDate('inv_date', '>=', $request->date_from)
+            ->whereDate('inv_date', '<=', $request->date_to)
+            ->get();
+
+        foreach ($mst_inv as $key => $val) {
+            $data_do = DB::table('dtl_invoice')
+                ->leftJoin('mst_delivery_order', 'dtl_invoice.do_seq', 'mst_delivery_order.do_seq')
+                ->where('inv_seq', $val->inv_seq)
+                ->first();
+            $data_inv[$key] = $val;
+            $data_inv[$key]->total_cost = 0;
+            $data_inv[$key]->po_seq = $data_do->po_seq;
+            $data_inv[$key]->do_seq = $data_do->do_seq;
+            $data_inv[$key]->data_cust = DB::table('mst_customer')
+                ->where('kode', $val->inv_custid)
+                ->first();
+            $data_inv[$key]->inv_detail = DB::table('dtl_invoice')
+                ->where('inv_seq', $val->inv_seq)
+                ->get();
+
+            $total_cost = 0;
+            foreach ($data_inv[$key]->inv_detail as $key2 => $val2) {
+                $data_inv[$key]->inv_detail[$key2]->total_cost = $data_inv[$key]->inv_detail[$key2]->inv_cost * $data_inv[$key]->inv_detail[$key2]->inv_qty;
+                $total_cost += $data_inv[$key]->inv_detail[$key2]->total_cost;
+            }
+            $data_inv[$key]->total_cost = $total_cost;
+        }
+
+        if (!isset($data_inv)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Invoice Tidak Ditemukan.',
+                'data'    => null
+            ], 500);
+        }
+
+        return response()->json([
+            'success'       => true,
+            'message'       => 'Data Invoice Ditemukan.',
+            'data'          => $data_inv,
+        ], 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function prints_inv(Request $request)
     {
         $user = JWTAuth::user();
@@ -90,7 +142,7 @@ class Invoice_Controller extends Controller
             ->first();
 
         $data_do = DB::table('dtl_invoice')
-            ->leftJoin('mst_delivery_order', 'dtl_invoice.do_seq', '=', 'mst_delivery_order.do_seq')
+            ->leftJoin('mst_delivery_order', 'dtl_invoice.do_seq', 'mst_delivery_order.do_seq')
             ->where('inv_seq', $request->inv_seq)
             ->first();
 

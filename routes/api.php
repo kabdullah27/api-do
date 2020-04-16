@@ -28,6 +28,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
 
     Route::prefix('invoice')->group(function () {
         Route::get('show', 'Invoice_controller@show');
+        Route::post('invoice_excel', 'Invoice_controller@invoice_excel');
         Route::post('insert', 'Invoice_controller@store');
         Route::post('prints', 'Invoice_controller@prints_inv');
     });
