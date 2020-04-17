@@ -33,6 +33,16 @@ class DO_Controller extends Controller
     public function show()
     {
         $mst_do = DB::table('mst_delivery_order')
+            ->select(
+                'do_seq',
+                'po_seq',
+                'do_date',
+                'do_custid',
+                'do_deskripsi',
+                'is_active',
+                'created_by',
+                'created_at',
+            )
             ->where('is_active', 1)
             ->get();
 
@@ -44,9 +54,32 @@ class DO_Controller extends Controller
             $data_do[$key]->flag_invoice = (isset($flag_invoice)) ? 1 : 0;
             $data_do[$key]->total_cost = 0;
             $data_do[$key]->data_cust = DB::table('mst_customer')
+                ->select(
+                    'kode',
+                    'store_name',
+                    'store_rgm',
+                    'store_address',
+                    'store_postal_code',
+                    'store_area',
+                    'rgm_cug',
+                    'store_cug',
+                    'store_email',
+                )
                 ->where('kode', $val->do_custid)
                 ->first();
             $data_do[$key]->do_detail = DB::table('dtl_delivery_order')
+                ->leftJoin('mst_item', 'mst_item.kode', '=', 'dtl_delivery_order.do_itemid')
+                ->select(
+                    'do_seq',
+                    'do_rownum',
+                    'do_itemid',
+                    'deskripsi_barang',
+                    'do_deskripsi',
+                    'do_qty',
+                    'do_cost',
+                    'do_satuan',
+                    'dtl_delivery_order.is_active',
+                )
                 ->where('do_seq', $val->do_seq)
                 ->get();
             $total_cost = 0;
@@ -82,6 +115,16 @@ class DO_Controller extends Controller
         $user = JWTAuth::user();
         // dd($request);
         $mst_do = DB::table('mst_delivery_order')
+            ->select(
+                'do_seq',
+                'po_seq',
+                'do_date',
+                'do_custid',
+                'do_deskripsi',
+                'is_active',
+                'created_by',
+                'created_at',
+            )
             ->where('do_seq', $request->do_seq)
             ->first();
 
@@ -92,9 +135,32 @@ class DO_Controller extends Controller
         $mst_do->total_cost = 0;
         $mst_do->user_print = $user->user_code;
         $mst_do->data_cust = DB::table('mst_customer')
+            ->select(
+                'kode',
+                'store_name',
+                'store_rgm',
+                'store_address',
+                'store_postal_code',
+                'store_area',
+                'rgm_cug',
+                'store_cug',
+                'store_email',
+            )
             ->where('kode', $mst_do->do_custid)
             ->first();
         $mst_do->do_detail = DB::table('dtl_delivery_order')
+            ->leftJoin('mst_item', 'mst_item.kode', '=', 'dtl_delivery_order.do_itemid')
+            ->select(
+                'do_seq',
+                'do_rownum',
+                'do_itemid',
+                'deskripsi_barang',
+                'do_deskripsi',
+                'do_qty',
+                'do_cost',
+                'do_satuan',
+                'dtl_delivery_order.is_active',
+            )
             ->where('do_seq', $request->do_seq)
             ->get();
         $total_cost = 0;
