@@ -30,7 +30,7 @@ class Mst_item extends Model
      * @var array
      */
     protected $hidden = [
-        'created_by', 'created_at', 'edited_by', 'updated_at'
+        'id', 'created_by', 'created_at', 'edited_by', 'updated_at'
     ];
 
     /**

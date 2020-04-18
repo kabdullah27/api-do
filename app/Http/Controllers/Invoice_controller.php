@@ -35,6 +35,16 @@ class Invoice_Controller extends Controller
     public function show()
     {
         $mst_inv = DB::table('mst_invoice')
+            ->select(
+                'kwitansi_seq',
+                'inv_seq',
+                'inv_date',
+                'inv_custid',
+                'inv_deskripsi',
+                'is_active',
+                'created_by',
+                'created_at',
+            )
             ->where('is_active', '=', 1)
             ->get();
 
@@ -48,9 +58,34 @@ class Invoice_Controller extends Controller
             $data_inv[$key]->po_seq = $data_do->po_seq;
             $data_inv[$key]->do_seq = $data_do->do_seq;
             $data_inv[$key]->data_cust = DB::table('mst_customer')
+                ->select(
+                    'kode',
+                    'store_name',
+                    'store_rgm',
+                    'store_address',
+                    'store_postal_code',
+                    'store_area',
+                    'rgm_cug',
+                    'store_cug',
+                    'store_email',
+                )
                 ->where('kode', $val->inv_custid)
                 ->first();
             $data_inv[$key]->inv_detail = DB::table('dtl_invoice')
+                ->leftJoin('mst_item', 'mst_item.kode', '=', 'dtl_invoice.inv_itemid')
+                ->select(
+                    'kwitansi_seq',
+                    'inv_seq',
+                    'do_seq',
+                    'inv_rownum',
+                    'inv_itemid',
+                    'deskripsi_barang',
+                    'inv_deskripsi',
+                    'inv_qty',
+                    'inv_cost',
+                    'inv_satuan',
+                    'dtl_invoice.is_active',
+                )
                 ->where('inv_seq', $val->inv_seq)
                 ->get();
 
@@ -85,6 +120,16 @@ class Invoice_Controller extends Controller
     public function invoice_excel(Request $request)
     {
         $mst_inv = DB::table('mst_invoice')
+            ->select(
+                'kwitansi_seq',
+                'inv_seq',
+                'inv_date',
+                'inv_custid',
+                'inv_deskripsi',
+                'is_active',
+                'created_by',
+                'created_at',
+            )
             ->where('is_active', '=', 1)
             ->whereDate('inv_date', '>=', $request->date_from)
             ->whereDate('inv_date', '<=', $request->date_to)
@@ -100,9 +145,34 @@ class Invoice_Controller extends Controller
             $data_inv[$key]->po_seq = $data_do->po_seq;
             $data_inv[$key]->do_seq = $data_do->do_seq;
             $data_inv[$key]->data_cust = DB::table('mst_customer')
+                ->select(
+                    'kode',
+                    'store_name',
+                    'store_rgm',
+                    'store_address',
+                    'store_postal_code',
+                    'store_area',
+                    'rgm_cug',
+                    'store_cug',
+                    'store_email',
+                )
                 ->where('kode', $val->inv_custid)
                 ->first();
             $data_inv[$key]->inv_detail = DB::table('dtl_invoice')
+                ->leftJoin('mst_item', 'mst_item.kode', '=', 'dtl_invoice.inv_itemid')
+                ->select(
+                    'kwitansi_seq',
+                    'inv_seq',
+                    'do_seq',
+                    'inv_rownum',
+                    'inv_itemid',
+                    'deskripsi_barang',
+                    'inv_deskripsi',
+                    'inv_qty',
+                    'inv_cost',
+                    'inv_satuan',
+                    'dtl_invoice.is_active',
+                )
                 ->where('inv_seq', $val->inv_seq)
                 ->get();
 
@@ -138,6 +208,16 @@ class Invoice_Controller extends Controller
     {
         $user = JWTAuth::user();
         $mst_inv = DB::table('mst_invoice')
+            ->select(
+                'kwitansi_seq',
+                'inv_seq',
+                'inv_date',
+                'inv_custid',
+                'inv_deskripsi',
+                'is_active',
+                'created_by',
+                'created_at',
+            )
             ->where('inv_seq', $request->inv_seq)
             ->first();
 
@@ -151,9 +231,34 @@ class Invoice_Controller extends Controller
         $mst_inv->po_seq = $data_do->po_seq;
         $mst_inv->do_seq = $data_do->do_seq;
         $mst_inv->data_cust = DB::table('mst_customer')
+            ->select(
+                'kode',
+                'store_name',
+                'store_rgm',
+                'store_address',
+                'store_postal_code',
+                'store_area',
+                'rgm_cug',
+                'store_cug',
+                'store_email',
+            )
             ->where('kode', $mst_inv->inv_custid)
             ->first();
         $mst_inv->inv_detail = DB::table('dtl_invoice')
+            ->leftJoin('mst_item', 'mst_item.kode', '=', 'dtl_invoice.inv_itemid')
+            ->select(
+                'kwitansi_seq',
+                'inv_seq',
+                'do_seq',
+                'inv_rownum',
+                'inv_itemid',
+                'deskripsi_barang',
+                'inv_deskripsi',
+                'inv_qty',
+                'inv_cost',
+                'inv_satuan',
+                'dtl_invoice.is_active',
+            )
             ->where('inv_seq', $request->inv_seq)
             ->get();
 
