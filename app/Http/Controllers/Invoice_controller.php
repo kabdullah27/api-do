@@ -119,8 +119,10 @@ class Invoice_Controller extends Controller
      */
     public function invoice_excel(Request $request)
     {
+        DB::statement(DB::raw('set @rownum=0'));
         $mst_inv = DB::table('mst_invoice')
             ->select(
+                DB::raw('@rownum  := @rownum  + 1 AS rownum'),
                 'kwitansi_seq',
                 'inv_seq',
                 'inv_date',
@@ -130,11 +132,12 @@ class Invoice_Controller extends Controller
                 'created_by',
                 'created_at',
             )
-            ->where('is_active', '=', 1)
+            ->where('is_active', 1)
             ->whereDate('inv_date', '>=', $request->date_from)
             ->whereDate('inv_date', '<=', $request->date_to)
             ->get();
 
+        $total_cost_inv = 0;
         foreach ($mst_inv as $key => $val) {
             $data_do = DB::table('dtl_invoice')
                 ->leftJoin('mst_delivery_order', 'dtl_invoice.do_seq', 'mst_delivery_order.do_seq')
@@ -182,6 +185,7 @@ class Invoice_Controller extends Controller
                 $total_cost += $data_inv[$key]->inv_detail[$key2]->total_cost;
             }
             $data_inv[$key]->total_cost = $total_cost;
+            $total_cost_inv += $total_cost;
         }
 
         if (!isset($data_inv)) {
@@ -193,9 +197,11 @@ class Invoice_Controller extends Controller
         }
 
         return response()->json([
-            'success'       => true,
-            'message'       => 'Data Invoice Ditemukan.',
-            'data'          => $data_inv,
+            'success'           => true,
+            'message'           => 'Data Invoice Ditemukan.',
+            'total_cost_inv'    => $total_cost_inv,
+            'terbilang'         => Terbilang::make($total_cost_inv, ' rupiah'),
+            'data'              => $data_inv,
         ], 200);
     }
 
