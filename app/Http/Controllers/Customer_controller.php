@@ -171,7 +171,7 @@ class Customer_controller extends Controller
         $user = JWTAuth::user();
 
         $data = $request->all();
-        $updated_row = Mst_customer::find($data['kode']);
+        $updated_row = Mst_customer::where('kode', $data['kode'])->first();
         if (!$updated_row) {
             return response()->json([
                 'success' => false,
