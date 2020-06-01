@@ -55,7 +55,7 @@ class Item_controller extends Controller
         $data['deskripsi_barang'] = $request->deskripsi_barang;
         $data['satuan'] = (isset($request->satuan)) ? $request->satuan : 'UNIT';
         $data['harga'] = $request->harga;
-        $data['is_edit'] = 0;
+        $data['is_edit'] = $request->is_edit;
         $data['created_by'] = $user->user_code;
         $data['edited_by'] = $user->user_code;
 
@@ -106,6 +106,7 @@ class Item_controller extends Controller
                 'deskripsi_barang' => $data['deskripsi_barang'],
                 'satuan' => (isset($data['satuan'])) ? $data['satuan'] : 'UNIT',
                 'harga' => $data['harga'],
+                'is_edit' => (isset($data['is_edit'])) ? $data['is_edit'] : 0,
                 'edited_by' => $user->user_code,
                 'updated_at' => now()
             ]);

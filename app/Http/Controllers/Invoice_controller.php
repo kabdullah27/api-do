@@ -43,7 +43,7 @@ class Invoice_Controller extends Controller
                 'inv_deskripsi',
                 'is_active',
                 'created_by',
-                'created_at',
+                'created_at'
             )
             ->where('is_active', '=', 1)
             ->get();
@@ -67,7 +67,7 @@ class Invoice_Controller extends Controller
                     'store_area',
                     'rgm_cug',
                     'store_cug',
-                    'store_email',
+                    'store_email'
                 )
                 ->where('kode', $val->inv_custid)
                 ->first();
@@ -84,7 +84,7 @@ class Invoice_Controller extends Controller
                     'inv_qty',
                     'inv_cost',
                     'inv_satuan',
-                    'dtl_invoice.is_active',
+                    'dtl_invoice.is_active'
                 )
                 ->where('inv_seq', $val->inv_seq)
                 ->get();
@@ -130,7 +130,7 @@ class Invoice_Controller extends Controller
                 'inv_deskripsi',
                 'is_active',
                 'created_by',
-                'created_at',
+                'created_at'
             )
             ->where('is_active', 1)
             ->whereDate('inv_date', '>=', $request->date_from)
@@ -157,7 +157,7 @@ class Invoice_Controller extends Controller
                     'store_area',
                     'rgm_cug',
                     'store_cug',
-                    'store_email',
+                    'store_email'
                 )
                 ->where('kode', $val->inv_custid)
                 ->first();
@@ -174,7 +174,7 @@ class Invoice_Controller extends Controller
                     'inv_qty',
                     'inv_cost',
                     'inv_satuan',
-                    'dtl_invoice.is_active',
+                    'dtl_invoice.is_active'
                 )
                 ->where('inv_seq', $val->inv_seq)
                 ->get();
@@ -222,7 +222,7 @@ class Invoice_Controller extends Controller
                 'inv_deskripsi',
                 'is_active',
                 'created_by',
-                'created_at',
+                'created_at'
             )
             ->where('inv_seq', $request->inv_seq)
             ->first();
@@ -246,7 +246,7 @@ class Invoice_Controller extends Controller
                 'store_area',
                 'rgm_cug',
                 'store_cug',
-                'store_email',
+                'store_email'
             )
             ->where('kode', $mst_inv->inv_custid)
             ->first();
@@ -263,7 +263,7 @@ class Invoice_Controller extends Controller
                 'inv_qty',
                 'inv_cost',
                 'inv_satuan',
-                'dtl_invoice.is_active',
+                'dtl_invoice.is_active'
             )
             ->where('inv_seq', $request->inv_seq)
             ->get();
@@ -310,20 +310,21 @@ class Invoice_Controller extends Controller
             ->where('do_seq', '=', $request->do_seq)
             ->get();
 
-        $sequance_kwitansi = DB::table('dtl_invoice')
-            ->where('is_active', '=', 1)
-            ->whereDate('created_at', '=', Carbon::now()->format('Y-m-d'))
+        $sequance_kwitansi = DB::table('mst_invoice')
+            ->selectRaw('count(kwitansi_seq) count_kwitansi, kwitansi_seq ')
+            ->whereRaw('kwitansi_seq = (select max(kwitansi_seq) OVER (PARTITION BY created_at desc) from mst_invoice limit 1)')
+            ->groupBy('kwitansi_seq')
             ->first();
 
         // Get Sequence
-        if (!isset($sequance_kwitansi)) {
+        if ($sequance_kwitansi->count_kwitansi >= 30) {
             $sequance_kwitansi = DB::select("select NEXTVAL(kwitansi_sequance) as seq");
-            $sequance_kwitansi = str_pad($sequance_kwitansi[0]->seq, 5, '0', STR_PAD_LEFT) . '-BE-KWI-' . Carbon::now()->year;
+            $sequance_kwitansi = str_pad($sequance_kwitansi[0]->seq, 5, '0', STR_PAD_LEFT) . '-BE-KW-' . $this->numberToRoman(Carbon::now()->month) . '-' . Carbon::now()->year;
         } else {
-            $sequance_kwitansi = str_pad($sequance_kwitansi->kwitansi_seq, 5, '0', STR_PAD_LEFT) . '-BE-KWI-' . Carbon::now()->year;
+            $sequance_kwitansi = $sequance_kwitansi->kwitansi_seq;
         }
         $sequence_inv = DB::select("select NEXTVAL(inv_sequance) as seq");
-        $sequence_inv = str_pad($sequence_inv[0]->seq, 5, '0', STR_PAD_LEFT) . '-BE-INV-' . Carbon::now()->year;
+        $sequence_inv = str_pad($sequence_inv[0]->seq, 5, '0', STR_PAD_LEFT) . '-BE-INV-' . $this->numberToRoman(Carbon::now()->month) . '-' . Carbon::now()->year;
 
         $id = DB::select('select UUID() as uuid');
         $data_mst['id'] = $id[0]->uuid;
@@ -374,5 +375,25 @@ class Invoice_Controller extends Controller
             'data_mst'      => $data_mst,
             'data_detail'   => $data_dtl
         ], 200);
+    }
+
+    /**
+     * @param int $number
+     * @return string
+     */
+    function numberToRoman($number)
+    {
+        $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+        $returnValue = '';
+        while ($number > 0) {
+            foreach ($map as $roman => $int) {
+                if ($number >= $int) {
+                    $number -= $int;
+                    $returnValue .= $roman;
+                    break;
+                }
+            }
+        }
+        return $returnValue;
     }
 }

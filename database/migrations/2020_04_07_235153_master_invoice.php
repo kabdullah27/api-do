@@ -15,7 +15,7 @@ class MasterInvoice extends Migration
     {
         Schema::create('mst_invoice', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('kwitansi_seq')->unique();
+            $table->string('kwitansi_seq');
             $table->string('inv_seq')->unique();
             $table->date('inv_date')->useCurrent();
             $table->text('inv_custid');

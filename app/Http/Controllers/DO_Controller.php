@@ -41,8 +41,8 @@ class DO_Controller extends Controller
                 'do_deskripsi',
                 'is_active',
                 'created_by',
-                'created_at',
-            )
+                'created_at'
+                )
             ->where('is_active', 1)
             ->get();
 
@@ -63,7 +63,7 @@ class DO_Controller extends Controller
                     'store_area',
                     'rgm_cug',
                     'store_cug',
-                    'store_email',
+                    'store_email'
                 )
                 ->where('kode', $val->do_custid)
                 ->first();
@@ -78,7 +78,7 @@ class DO_Controller extends Controller
                     'do_qty',
                     'do_cost',
                     'do_satuan',
-                    'dtl_delivery_order.is_active',
+                    'dtl_delivery_order.is_active'
                 )
                 ->where('do_seq', $val->do_seq)
                 ->get();
@@ -123,7 +123,7 @@ class DO_Controller extends Controller
                 'do_deskripsi',
                 'is_active',
                 'created_by',
-                'created_at',
+                'created_at'
             )
             ->where('do_seq', $request->do_seq)
             ->first();
@@ -144,7 +144,7 @@ class DO_Controller extends Controller
                 'store_area',
                 'rgm_cug',
                 'store_cug',
-                'store_email',
+                'store_email'
             )
             ->where('kode', $mst_do->do_custid)
             ->first();
@@ -159,7 +159,7 @@ class DO_Controller extends Controller
                 'do_qty',
                 'do_cost',
                 'do_satuan',
-                'dtl_delivery_order.is_active',
+                'dtl_delivery_order.is_active'
             )
             ->where('do_seq', $request->do_seq)
             ->get();
@@ -202,7 +202,7 @@ class DO_Controller extends Controller
 
         $id = DB::select('select UUID() as uuid');
         $data_mst['id'] = $id[0]->uuid;
-        $data_mst['do_seq'] = str_pad($sequence, 5, '0', STR_PAD_LEFT) . '-BE-DO-' . Carbon::now()->year;
+        $data_mst['do_seq'] = str_pad($sequence, 5, '0', STR_PAD_LEFT) . '-BE-'.  $this->numberToRoman(Carbon::now()->month) . '-' . Carbon::now()->year;
         $data_mst['po_seq'] = $request->po_seq;
         $data_mst['do_date'] = (isset($request->do_date)) ? $request->do_date : Carbon::now()->format('Y/m/d');
         $data_mst['do_custid'] = $request->do_custid;
@@ -246,5 +246,21 @@ class DO_Controller extends Controller
             'data_mst'      => $data_mst,
             'data_detail'   => $data_dtl
         ], 200);
+    }
+
+    function numberToRoman($number)
+    {
+        $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+        $returnValue = '';
+        while ($number > 0) {
+            foreach ($map as $roman => $int) {
+                if ($number >= $int) {
+                    $number -= $int;
+                    $returnValue .= $roman;
+                    break;
+                }
+            }
+        }
+        return $returnValue;
     }
 }
