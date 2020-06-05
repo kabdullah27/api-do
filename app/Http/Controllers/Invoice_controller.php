@@ -312,17 +312,22 @@ class Invoice_Controller extends Controller
 
         $sequance_kwitansi = DB::table('mst_invoice')
             ->selectRaw('count(kwitansi_seq) count_kwitansi, kwitansi_seq ')
-            ->whereRaw('kwitansi_seq = (select max(kwitansi_seq) OVER (PARTITION BY created_at desc) from mst_invoice limit 1)')
+            ->whereRaw('kwitansi_seq = (select CAST(max(kwitansi_seq) OVER (PARTITION BY created_at desc) as CHAR) from mst_invoice limit 1)')
             ->groupBy('kwitansi_seq')
             ->first();
 
         // Get Sequence
-        if ($sequance_kwitansi->count_kwitansi >= 30) {
+        if(isset($sequance_kwitansi)){
+            if ($sequance_kwitansi->count_kwitansi >= 30) {
+                    $sequance_kwitansi = DB::select("select NEXTVAL(kwitansi_sequance) as seq");
+                    $sequance_kwitansi = str_pad($sequance_kwitansi[0]->seq, 5, '0', STR_PAD_LEFT) . '-BE-KW-' . $this->numberToRoman(Carbon::now()->month) . '-' . Carbon::now()->year;
+            } else {
+                    $sequance_kwitansi = $sequance_kwitansi->kwitansi_seq;
+            }
+        }else{
             $sequance_kwitansi = DB::select("select NEXTVAL(kwitansi_sequance) as seq");
             $sequance_kwitansi = str_pad($sequance_kwitansi[0]->seq, 5, '0', STR_PAD_LEFT) . '-BE-KW-' . $this->numberToRoman(Carbon::now()->month) . '-' . Carbon::now()->year;
-        } else {
-            $sequance_kwitansi = $sequance_kwitansi->kwitansi_seq;
-        }
+        }      
         $sequence_inv = DB::select("select NEXTVAL(inv_sequance) as seq");
         $sequence_inv = str_pad($sequence_inv[0]->seq, 5, '0', STR_PAD_LEFT) . '-BE-INV-' . $this->numberToRoman(Carbon::now()->month) . '-' . Carbon::now()->year;
 
