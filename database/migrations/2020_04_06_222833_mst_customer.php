@@ -34,7 +34,7 @@ class MstCustomer extends Migration
             $table->string('edited_by')->default('admin');
             $table->dateTime('updated_at')->useCurrent();
         });
-        DB::statement('CREATE SEQUENCE customer_sequance START WITH 1 INCREMENT BY 1;');
+        // DB::statement('CREATE SEQUENCE customer_sequance START WITH 1 INCREMENT BY 1;');
     }
 
     /**

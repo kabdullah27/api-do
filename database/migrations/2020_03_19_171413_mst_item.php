@@ -26,7 +26,7 @@ class MstItem extends Migration
             $table->text('edited_by')->default('admin');
             $table->dateTime('updated_at')->useCurrent();
         });
-        DB::statement('CREATE SEQUENCE item_sequance START WITH 1 INCREMENT BY 1;');
+        // DB::statement('CREATE SEQUENCE item_sequance START WITH 1 INCREMENT BY 1;');
     }
 
     /**

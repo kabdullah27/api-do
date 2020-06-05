@@ -45,12 +45,13 @@ class Customer_controller extends Controller
         $user = JWTAuth::user();
 
         // Get Sequence
-        $sequence = DB::select("select NEXTVAL(customer_sequance) as seq");
-        $sequence = $sequence[0]->seq;
+        /* $sequence = DB::select("select NEXTVAL(customer_sequance) as seq");
+        $sequence = $sequence[0]->seq; */
 
         $id = DB::select('select UUID() as uuid');
         $data['id'] = $id[0]->uuid;
-        $data['kode'] = str_pad($sequence, 4, '0', STR_PAD_LEFT);
+        // $data['kode'] = str_pad($sequence, 4, '0', STR_PAD_LEFT);
+        $data['kode'] = $request->kode;
         $data['store_name'] = $request->store_name;
         $data['store_rgm'] = $request->store_rgm;
         $data['store_address'] = $request->store_address;

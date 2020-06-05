@@ -46,12 +46,13 @@ class Item_controller extends Controller
         $user = JWTAuth::user();
 
         // Get Sequence
-        $sequence = DB::select("select NEXTVAL(item_sequance) as seq");
-        $sequence = $sequence[0]->seq;
+        /* $sequence = DB::select("select NEXTVAL(item_sequance) as seq");
+        $sequence = $sequence[0]->seq; */
 
         $id = DB::select('select UUID() as uuid');
         $data['id'] = $id[0]->uuid;
-        $data['kode'] = 'N' . Carbon::now()->year . str_pad($sequence, 5, '0', STR_PAD_LEFT);
+        // $data['kode'] = 'N' . Carbon::now()->year . str_pad($sequence, 5, '0', STR_PAD_LEFT);
+        $data['kode'] = $request->kode;
         $data['deskripsi_barang'] = $request->deskripsi_barang;
         $data['satuan'] = (isset($request->satuan)) ? $request->satuan : 'UNIT';
         $data['harga'] = $request->harga;
