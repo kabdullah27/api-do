@@ -25,6 +25,7 @@ class DO_Controller extends Controller
     public function __construct()
     {
         $this->user = JWTAuth::parseToken()->authenticate();
+        setlocale(LC_ALL, "id-ID.UTF-8");
     }
 
     /**
@@ -42,7 +43,7 @@ class DO_Controller extends Controller
                 'is_active',
                 'created_by',
                 'created_at'
-                )
+            )
             ->where('is_active', 1)
             ->get();
 
@@ -51,6 +52,7 @@ class DO_Controller extends Controller
                 ->where('do_seq', $val->do_seq)
                 ->first();
             $data_do[$key] = $val;
+            $data_do[$key]->do_date_fmt = Carbon::createFromFormat('Y-m-d', $val->do_date)->format('d F Y');
             $data_do[$key]->flag_invoice = (isset($flag_invoice)) ? 1 : 0;
             $data_do[$key]->total_cost = 0;
             $data_do[$key]->data_cust = DB::table('mst_customer')
@@ -132,6 +134,7 @@ class DO_Controller extends Controller
             ->where('do_seq', $request->do_seq)
             ->first();
         $mst_do->flag_invoice = (isset($flag_invoice)) ? 1 : 0;
+        $mst_do->do_date_fmt =  Carbon::createFromFormat('Y-m-d', $mst_do->do_date)->format('d F Y');
         $mst_do->total_cost = 0;
         $mst_do->user_print = $user->user_code;
         $mst_do->data_cust = DB::table('mst_customer')
@@ -202,7 +205,7 @@ class DO_Controller extends Controller
 
         $id = DB::select('select UUID() as uuid');
         $data_mst['id'] = $id[0]->uuid;
-        $data_mst['do_seq'] = str_pad($sequence, 5, '0', STR_PAD_LEFT) . '-BE-'.  $this->numberToRoman(Carbon::now()->month) . '-' . Carbon::now()->year;
+        $data_mst['do_seq'] = str_pad($sequence, 5, '0', STR_PAD_LEFT) . '-BE-' .  $this->numberToRoman(Carbon::now()->month) . '-' . Carbon::now()->year;
         $data_mst['po_seq'] = $request->po_seq;
         $data_mst['do_date'] = (isset($request->do_date)) ? $request->do_date : Carbon::now()->format('Y/m/d');
         $data_mst['do_custid'] = $request->do_custid;

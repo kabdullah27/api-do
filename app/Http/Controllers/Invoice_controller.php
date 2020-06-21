@@ -27,6 +27,7 @@ class Invoice_Controller extends Controller
     public function __construct()
     {
         $this->user = JWTAuth::parseToken()->authenticate();
+        setlocale(LC_ALL, "id-ID.UTF-8");
     }
 
     /**
@@ -54,6 +55,7 @@ class Invoice_Controller extends Controller
                 ->where('inv_seq', $val->inv_seq)
                 ->first();
             $data_inv[$key] = $val;
+            $data_inv[$key]->inv_date_fmt = Carbon::createFromFormat('Y-m-d', $val->inv_date)->format('d F Y');
             $data_inv[$key]->total_cost = 0;
             $data_inv[$key]->po_seq = $data_do->po_seq;
             $data_inv[$key]->do_seq = $data_do->do_seq;
@@ -144,6 +146,7 @@ class Invoice_Controller extends Controller
                 ->where('inv_seq', $val->inv_seq)
                 ->first();
             $data_inv[$key] = $val;
+            $data_inv[$key]->inv_date_fmt =  Carbon::createFromFormat('Y-m-d', $val->inv_date)->format('d F Y');
             $data_inv[$key]->total_cost = 0;
             $data_inv[$key]->po_seq = $data_do->po_seq;
             $data_inv[$key]->do_seq = $data_do->do_seq;
@@ -232,6 +235,7 @@ class Invoice_Controller extends Controller
             ->where('inv_seq', $request->inv_seq)
             ->first();
 
+        $mst_inv->inv_date_fmt =  Carbon::createFromFormat('Y-m-d', $mst_inv->inv_date)->format('d F Y');
         $mst_inv->total_cost = 0;
         $mst_inv->user_print = $user->user_code;
         $mst_inv->po_seq = $data_do->po_seq;
@@ -317,17 +321,17 @@ class Invoice_Controller extends Controller
             ->first();
 
         // Get Sequence
-        if(isset($sequance_kwitansi)){
+        if (isset($sequance_kwitansi)) {
             if ($sequance_kwitansi->count_kwitansi >= 30) {
-                    $sequance_kwitansi = DB::select("select NEXTVAL(kwitansi_sequance) as seq");
-                    $sequance_kwitansi = str_pad($sequance_kwitansi[0]->seq, 5, '0', STR_PAD_LEFT) . '-BE-KW-' . $this->numberToRoman(Carbon::now()->month) . '-' . Carbon::now()->year;
+                $sequance_kwitansi = DB::select("select NEXTVAL(kwitansi_sequance) as seq");
+                $sequance_kwitansi = str_pad($sequance_kwitansi[0]->seq, 5, '0', STR_PAD_LEFT) . '-BE-KW-' . $this->numberToRoman(Carbon::now()->month) . '-' . Carbon::now()->year;
             } else {
-                    $sequance_kwitansi = $sequance_kwitansi->kwitansi_seq;
+                $sequance_kwitansi = $sequance_kwitansi->kwitansi_seq;
             }
-        }else{
+        } else {
             $sequance_kwitansi = DB::select("select NEXTVAL(kwitansi_sequance) as seq");
             $sequance_kwitansi = str_pad($sequance_kwitansi[0]->seq, 5, '0', STR_PAD_LEFT) . '-BE-KW-' . $this->numberToRoman(Carbon::now()->month) . '-' . Carbon::now()->year;
-        }      
+        }
         $sequence_inv = DB::select("select NEXTVAL(inv_sequance) as seq");
         $sequence_inv = str_pad($sequence_inv[0]->seq, 5, '0', STR_PAD_LEFT) . '-BE-INV-' . $this->numberToRoman(Carbon::now()->month) . '-' . Carbon::now()->year;
 
@@ -335,7 +339,8 @@ class Invoice_Controller extends Controller
         $data_mst['id'] = $id[0]->uuid;
         $data_mst['inv_seq'] = $sequence_inv;
         $data_mst['kwitansi_seq'] = $sequance_kwitansi;
-        $data_mst['inv_date'] = $mst_do->do_date;
+        // $data_mst['inv_date'] = $mst_do->do_date;
+        $data_mst['inv_date'] = Carbon::now()->format('Y/m/d');
         $data_mst['inv_custid'] = $mst_do->do_custid;
         $data_mst['inv_deskripsi'] = $mst_do->do_deskripsi;
         $data_mst['created_by'] = $user->user_code;
