@@ -95,14 +95,14 @@ class DO_Controller extends Controller
         if (!isset($data_do)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data DO Tidak Ditemukan.',
+                'message' => 'Data DO not found',
                 'data'    => null
             ], 500);
         }
 
         return response()->json([
             'success'       => true,
-            'message'       => 'Data DO Berhasil Ditemukan.',
+            'message'       => 'Data DO success to find',
             'data'          => $data_do,
         ], 200);
     }
@@ -178,14 +178,14 @@ class DO_Controller extends Controller
         if (!isset($mst_do)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data DO Tidak Ditemukan.',
+                'message' => 'Data DO not found.',
                 'data'    => null
             ], 500);
         }
 
         return response()->json([
             'success'       => true,
-            'message'       => 'Data DO Berhasil Ditemukan.',
+            'message'       => 'Data DO success to find',
             'data'          => $mst_do,
         ], 200);
     }
@@ -222,7 +222,7 @@ class DO_Controller extends Controller
             $validateMsg = [$validatorDtl->messages()->toArray(), $validator->messages()->toArray()];
             return response()->json([
                 'success' => false,
-                'message' => 'Data DO Gagal Dibuat.',
+                'message' => 'Data DO failed to save',
                 'data'    => $validateMsg
             ], 500);
         }
@@ -245,7 +245,7 @@ class DO_Controller extends Controller
 
         return response()->json([
             'success'       => true,
-            'message'       => 'Data DO Berhasil Dibuat',
+            'message'       => 'Data DO success to save',
             'data_mst'      => $data_mst,
             'data_detail'   => $data_dtl
         ], 200);

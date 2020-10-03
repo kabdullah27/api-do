@@ -102,14 +102,14 @@ class Invoice_Controller extends Controller
         if (!isset($data_inv)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data Invoice Tidak Ditemukan.',
+                'message' => 'Invoice data not found',
                 'data'    => null
             ], 500);
         }
 
         return response()->json([
             'success'       => true,
-            'message'       => 'Data Invoice Ditemukan.',
+            'message'       => 'Invoice data found',
             'data'          => $data_inv,
         ], 200);
     }
@@ -194,14 +194,14 @@ class Invoice_Controller extends Controller
         if (!isset($data_inv)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data Invoice Tidak Ditemukan.',
+                'message' => 'Invoice data not found',
                 'data'    => null
             ], 500);
         }
 
         return response()->json([
             'success'           => true,
-            'message'           => 'Data Invoice Ditemukan.',
+            'message'           => 'Invoice data found',
             'total_cost_inv'    => $total_cost_inv,
             'terbilang'         => Terbilang::make($total_cost_inv, ' rupiah'),
             'data'              => $data_inv,
@@ -285,14 +285,14 @@ class Invoice_Controller extends Controller
         if (!isset($mst_inv)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data Invoice Tidak Ditemukan.',
+                'message' => 'Data invoice not found.',
                 'data'    => null
             ], 500);
         }
 
         return response()->json([
             'success'       => true,
-            'message'       => 'Data Invoice Berhasil Ditemukan.',
+            'message'       => 'Invoice data found',
             'data'          => $mst_inv,
         ], 200);
     }
@@ -370,7 +370,7 @@ class Invoice_Controller extends Controller
             $validateMsg = [$validatorDtl->messages()->toArray(), $validator->messages()->toArray()];
             return response()->json([
                 'success' => false,
-                'message' => 'Data Invoice Gagal Dibuat.',
+                'message' => 'Invoice failed to save',
                 'data'    => $validateMsg
             ], 500);
         }
@@ -381,7 +381,7 @@ class Invoice_Controller extends Controller
 
         return response()->json([
             'success'       => true,
-            'message'       => 'Data Invoice Berhasil Dibuat',
+            'message'       => 'Invoice success to save',
             'data_mst'      => $data_mst,
             'data_detail'   => $data_dtl
         ], 200);
