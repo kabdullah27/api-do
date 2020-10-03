@@ -52,10 +52,10 @@ class Item_controller extends Controller
         $id = DB::select('select UUID() as uuid');
         $data['id'] = $id[0]->uuid;
         // $data['kode'] = 'N' . Carbon::now()->year . str_pad($sequence, 5, '0', STR_PAD_LEFT);
-        $data['kode'] = $request->kode;
-        $data['deskripsi_barang'] = $request->deskripsi_barang;
-        $data['satuan'] = (isset($request->satuan)) ? $request->satuan : 'UNIT';
-        $data['harga'] = $request->harga;
+        $data['code'] = $request->code;
+        $data['description'] = $request->description;
+        $data['pieces'] = (isset($request->satuan)) ? $request->pieces : 'UNIT';
+        $data['price'] = $request->price;
         $data['is_edit'] = $request->is_edit;
         $data['created_by'] = $user->user_code;
         $data['edited_by'] = $user->user_code;
@@ -66,7 +66,7 @@ class Item_controller extends Controller
             $validateMsg = [$validator->messages()->toArray()];
             return response()->json([
                 'success' => false,
-                'message' => 'Data Item Gagal Dibuat. ' . $validateMsg,
+                'message' => 'Item failed to save. ' . $validateMsg,
                 'data'    => $data
             ], 500);
         }
@@ -76,7 +76,7 @@ class Item_controller extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Data Item Berhasil Dibuat',
+            'message' => 'Item success to save',
             'data'    => $data
         ], 200);
     }
@@ -97,16 +97,16 @@ class Item_controller extends Controller
         if (!$updated_row) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data Item Tidak Ditemukan.',
+                'message' => 'Item not found',
                 'data'    => $data
             ], 500);
         }
 
         Mst_item::where('kode', $data['kode'])
             ->update([
-                'deskripsi_barang' => $data['deskripsi_barang'],
-                'satuan' => (isset($data['satuan'])) ? $data['satuan'] : 'UNIT',
-                'harga' => $data['harga'],
+                'description' => $data['description'],
+                'pieces' => (isset($data['pieces'])) ? $data['pieces'] : 'UNIT',
+                'price' => $data['price'],
                 'is_edit' => (isset($data['is_edit'])) ? $data['is_edit'] : 0,
                 'edited_by' => $user->user_code,
                 'updated_at' => now()
@@ -114,7 +114,7 @@ class Item_controller extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Data Item Berhasil Di Ubah',
+            'message' => 'Item has been updated',
             'data'    => $data
         ], 200);
     }
@@ -135,7 +135,7 @@ class Item_controller extends Controller
         if (!$updated_row) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data Item Tidak Ditemukan.',
+                'message' => 'Item not found',
                 'data'    => $data
             ], 500);
         }
@@ -149,7 +149,7 @@ class Item_controller extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Data Item Berhasil Di nonaktifkan',
+            'message' => 'Item has been nonaktif',
             'data'    => $data
         ], 200);
     }

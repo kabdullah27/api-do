@@ -73,7 +73,7 @@ class Customer_controller extends Controller
             $validateMsg = [$validator->messages()->toArray()];
             return response()->json([
                 'success' => false,
-                'message' => 'Data Customer Gagal Dibuat. ' . $validateMsg,
+                'message' => 'Customer data failed to save ' . $validateMsg,
                 'data'    => $data
             ], 500);
         }
@@ -83,7 +83,7 @@ class Customer_controller extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Data Customer Berhasil Dibuat',
+            'message' => 'Customer data success to save',
             'data'    => $data
         ], 200);
     }
@@ -104,7 +104,7 @@ class Customer_controller extends Controller
         if (!$updated_row) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data Customer Tidak Ditemukan.',
+                'message' => 'Customer data not found.',
                 'data'    => $data
             ], 500);
         }
@@ -129,7 +129,7 @@ class Customer_controller extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Data Customer Berhasil Di Ubah',
+            'message' => 'Customer data has been changed',
             'data'    => $data
         ], 200);
     }
@@ -148,14 +148,14 @@ class Customer_controller extends Controller
         if (!$updated_row) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data Customer Belum Digunakan.',
+                'message' => 'Customer data never been used.',
                 'data'    => $data
             ], 200);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Data Customer Sudah Digunakan',
+            'message' => 'Customer data has been used',
             'data'    => $data
         ], 200);
     }
@@ -176,7 +176,7 @@ class Customer_controller extends Controller
         if (!$updated_row) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data Customer Tidak Ditemukan.',
+                'message' => 'Customer data not found',
                 'data'    => $data
             ], 500);
         }
@@ -190,7 +190,7 @@ class Customer_controller extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Data Customer Berhasil Di nonaktifkan',
+            'message' => 'Customer data success to nonaktif',
             'data'    => $data
         ], 200);
     }
